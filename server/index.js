@@ -59,27 +59,23 @@ app.get('/callback', (req, res) => {
   }
 })
 
-app.put('/api/star', (req,res) => {
+app.route('/api/star') 
+.put((req,res) => {
   const { gitUser, gitRepo } = req.query
   axios.put(`https://api.github.com/user/starred/${gitUser}/${gitRepo}?access_token=${req.session.gitHubAccessToken}`)
   .then(response => {
     res.end()
-  }).catch(error => {
-    console.log('------- Axios error PUT on /api/star',error)
-    res.status(500).send({message: 'An error occurred on the server. Check the terminal.'})
   })
 })
-
-app.delete('/api/star', (req,res) => {
+.delete((req,res) => {
   const { gitUser, gitRepo } = req.query
   axios.delete(`https://api.github.com/user/starred/${gitUser}/${gitRepo}?access_token=${req.session.gitHubAccessToken}`)
   .then(response => {
     res.end()
-  }).catch(error => {
-    console.log('------- Axios error DELETE on /api/star',error)
-    res.status(500).send({message: 'An error occurred on the server. Check the terminal.'})
   })
 })
+
+
 
 
 app.get('/api/user-data', (req, res) => {

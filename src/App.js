@@ -13,8 +13,7 @@ class App extends Component {
     };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
-    this.star = this.star.bind(this);
-    this.unstar = this.unstar.bind(this);
+    this.starOrUnstar = this.starOrUnstar.bind(this);
   }
 
   componentDidMount() {
@@ -40,19 +39,19 @@ class App extends Component {
     });
   }
 
-  star() {
-    this.setState({ message: 'Starring...' });
-    axios.put(`/api/star?gitUser=${this.state.gitUser}&gitRepo=${this.state.gitRepo}`)
-      .then(() => this.setState({ message: 'Successfully starred repo' }))
-      .catch(error => this.setState({ message: error.message }));
+  starOrUnstar(val) {
+    this.setState({ message: 'Working...' })
+    if(val === 'star'){
+    axios.put(`/api/star?gitUser=${this.state.gitUser}&gitRepo=${this.state.gitRepo}&starred=${this.state.starred}`)
+    .then(() => this.setState({ message: 'Successfully starred repo' }))
+    .catch(error => this.setState({ message: error.message }));
+    } else {
+    axios.delete(`/api/star?gitUser=${this.state.gitUser}&gitRepo=${this.state.gitRepo}&starred=${this.state.starred}`)
+    .then(() => this.setState({ message: 'Successfully unstarred repo' }))
+    .catch(error => this.setState({ message: error.message }));
+    }
   }
     
-  unstar() {
-    this.setState({ message: 'Unstarring...' });
-    axios.delete(`/api/star?gitUser=${this.state.gitUser}&gitRepo=${this.state.gitRepo}`)
-      .then(() => this.setState({ message: 'Successfully unstarred repo' }))
-      .catch(error => this.setState({ message: error.message }));
-  }
 
   render() {
     return (
@@ -70,9 +69,9 @@ class App extends Component {
                 <input onChange={e => this.setState({ gitRepo: e.target.value })} placeholder='Repo to star' value={this.state.gitRepo} />
 
                 <div>
-                  <button onClick={this.star}>Add star</button>
-                  <button onClick={this.unstar}>Unstar</button>
-                  <button onClick={this.logout}>Logout</button>
+                  <button onClick={() => this.starOrUnstar('star')}>Add star</button>
+                  <button onClick={() => this.starOrUnstar('unstar')}>Unstar</button>
+                  <button onClick={() => this.logout}>Logout</button>
                 </div>
                 <div>{this.state.message}</div>
               </div>
